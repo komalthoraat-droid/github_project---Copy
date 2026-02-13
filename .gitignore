@@ -1,0 +1,17 @@
+# Node
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+
+# OS
+.DS_Store
+Thumbs.db
