@@ -2,16 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
     ArrowLeft,
     CheckCircle2,
     AlertCircle,
     TrendingUp,
-    Zap,
     Target,
     ShieldCheck,
-    FileText,
     BadgeAlert,
     Loader2
 } from "lucide-react";
@@ -81,7 +79,6 @@ export default function Results() {
 
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-8 pb-24">
-            {/* Header */}
             <div className="flex items-center justify-between">
                 <button onClick={() => router.push("/")} className="p-2 hover:bg-zinc-800 rounded-full transition">
                     <ArrowLeft className="w-6 h-6" />
@@ -93,7 +90,6 @@ export default function Results() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Col: Main Score & Verdict */}
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -123,13 +119,9 @@ export default function Results() {
                         <div className="inline-block px-4 py-2 rounded-xl bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">
                             {data.analysis.personality_type}
                         </div>
-                        <p className="text-sm text-zinc-400">
-                            Based on repository activity, README quality, and project variety.
-                        </p>
                     </div>
                 </motion.div>
 
-                {/* Middle Col: Radar Chart & Sub-scores */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -164,14 +156,8 @@ export default function Results() {
                 </motion.div>
             </div>
 
-            {/* Recruiter Logic: Strengths & Red Flags */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="glass p-8 rounded-3xl border-green-500/10"
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass p-8 rounded-3xl">
                     <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-green-400">
                         <CheckCircle2 className="w-6 h-6" />
                         Key Strengths
@@ -186,12 +172,7 @@ export default function Results() {
                     </ul>
                 </motion.div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="glass p-8 rounded-3xl border-red-500/10"
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass p-8 rounded-3xl">
                     <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-red-400">
                         <AlertCircle className="w-6 h-6" />
                         Red Flags
@@ -207,26 +188,15 @@ export default function Results() {
                 </motion.div>
             </div>
 
-            {/* Improvement Roadmap */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="glass p-8 rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-900 to-purple-900/10"
-            >
-                <div className="flex items-center justify-between mb-8">
-                    <h3 className="text-2xl font-bold flex items-center gap-3">
-                        <TrendingUp className="w-8 h-8 text-purple-500" />
-                        Actionable Roadmap
-                    </h3>
-                    <span className="text-sm text-zinc-500 px-3 py-1 bg-white/5 rounded-lg border border-white/10 italic">
-                        "Brutal growth strategy"
-                    </span>
-                </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass p-8 rounded-3xl">
+                <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                    <TrendingUp className="w-8 h-8 text-purple-500" />
+                    Actionable Roadmap
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                     {data.analysis.roadmap.map((step: string, i: number) => (
-                        <div key={i} className="bg-zinc-800/50 p-6 rounded-2xl border border-white/5 relative group hover:border-purple-500/50 transition-colors">
-                            <div className="text-4xl font-black text-white/5 absolute top-2 right-4 group-hover:text-purple-500/10 transition-colors">{i + 1}</div>
+                        <div key={i} className="bg-zinc-800/50 p-6 rounded-2xl border border-white/5 relative group">
+                            <div className="text-4xl font-black text-white/5 absolute top-2 right-4">{i + 1}</div>
                             <p className="text-sm font-medium text-zinc-200">{step}</p>
                         </div>
                     ))}
@@ -244,12 +214,7 @@ function ScoreBar({ label, value, color }: { label: string, value: number, color
                 <span className="text-white">{value}/100</span>
             </div>
             <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
-                <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${value}%` }}
-                    transition={{ duration: 1, delay: 0.5 }}
-                    className={`h-full ${color} shadow-[0_0_15px_rgba(0,0,0,0.5)]`}
-                />
+                <div className={`h-full ${color}`} style={{ width: `${value}%` }} />
             </div>
         </div>
     );
