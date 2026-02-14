@@ -14,7 +14,7 @@ RepoLens is an AI-powered GitHub profile analyzer designed for students and earl
 
 - **Frontend**: Next.js 14, Tailwind CSS, Framer Motion, Recharts.
 - **Backend**: FastAPI, Pydantic, HTTPX.
-- **AI**: OpenAI GPT-4o-mini.
+- **AI**: Google Gemini 1.5 Flash (via Google Cloud API).
 
 ## 🏃 Quick Start
 
@@ -22,21 +22,23 @@ RepoLens is an AI-powered GitHub profile analyzer designed for students and earl
 Create a `.env` file in the `backend/` directory:
 ```env
 GITHUB_TOKEN=your_github_token
-OPENAI_API_KEY=your_openai_key
+GEMINI_API_KEY=your_google_cloud_api_key
 ```
 
-### 2. Using Docker (Recommended)
-```bash
-docker-compose up --build
+And create a `.env.local` file in the `frontend/` directory (optional if running on localhost:8000):
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
-The app will be available at `http://localhost:3000`.
 
-### 3. Manual Installation
+### 2. Manual Installation
 
 #### Backend
 ```bash
 cd backend
 python -m venv venv
+# Windows:
+.\venv\Scripts\activate
+# Mac/Linux:
 source venv/bin/activate
 pip install -r requirements.txt
 python main.py
@@ -46,8 +48,10 @@ python main.py
 ```bash
 cd frontend
 npm install
-
+npm run dev
 ```
+
+The app will be available at `http://localhost:3000`.
 
 ## 📊 Scoring Logic
 
