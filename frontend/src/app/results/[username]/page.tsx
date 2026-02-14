@@ -32,7 +32,8 @@ export default function Results() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.post("http://localhost:8000/analyze", { username });
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+                const res = await axios.post(`${apiUrl}/analyze`, { username });
                 setData(res.data);
             } catch (err: any) {
                 setError(err.response?.data?.detail || "Failed to analyze profile. Make sure the backend is running.");
@@ -104,7 +105,7 @@ export default function Results() {
                         <div className="mt-8 pt-8 border-t border-white/5 space-y-2">
                             <p className="text-sm text-zinc-500 uppercase tracking-widest">Recruiter Verdict</p>
                             <div className={`text-3xl font-bold ${data.analysis.verdict === 'Shortlist' ? 'text-green-500' :
-                                    data.analysis.verdict === 'Maybe' ? 'text-yellow-500' : 'text-red-500'
+                                data.analysis.verdict === 'Maybe' ? 'text-yellow-500' : 'text-red-500'
                                 }`}>
                                 {data.analysis.verdict}
                             </div>

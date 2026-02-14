@@ -12,7 +12,7 @@ export default function Home() {
     const handleAnalyze = (e: React.FormEvent) => {
         e.preventDefault();
         if (!url) return;
-        const username = url.split("/").pop();
+        const username = url.trim().replace(/\/$/, "").split("/").pop();
         if (username) {
             router.push(`/results/${username}`);
         }

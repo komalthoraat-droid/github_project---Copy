@@ -1,10 +1,11 @@
 import os
-from openai import AsyncOpenAI
+import json
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 async def analyze_profile_qualitative(user_data: dict, repos_data: list, readmes: dict):
     # Construct a prompt that simulates a recruiter's perspective
@@ -35,18 +36,19 @@ async def analyze_profile_qualitative(user_data: dict, repos_data: list, readmes
     5. 'Recruiter Score': A score from 0-100 based on 'Hireability'.
     6. 'Actionable Roadmap': 5 specific, slightly bold tips to improve.
 
-    Return the result in JSON format with keys: verdict, personality_type, strengths, red_flags, recruiter_score, roadmap.
+    Return the result in JSON format ONLY with keys: verdict, personality_type, strengths, red_flags, recruiter_score, roadmap.
     Make the tone professional but slightly bold and honest.
     """
 
     try:
-        response = await client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"}
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = await model.generate_content_async(
+            prompt,
+            generation_config=genai.GenerationConfig(
+                response_mime_type="application/json"
+            )
         )
-        import json
-        return json.loads(response.choices[0].message.content)
+        return json.loads(response.text)
     except Exception as e:
         return {
             "verdict": "Maybe",

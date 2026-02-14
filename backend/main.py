@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from services import github_service, openai_service, scoring
+from services import github_service, gemini_service, scoring
 import uvicorn
+import re
 
 app = FastAPI(title="RepoLens API")
 
@@ -20,10 +21,25 @@ class AnalyzeRequest(BaseModel):
 def read_root():
     return {"message": "RepoLens API is live"}
 
+def extract_username(input_str: str) -> str:
+    # Handle full URLs with or without trailing slashes
+    # Examples:
+    # https://github.com/user
+    # https://github.com/user/
+    # github.com/user
+    # user
+    cleaned = input_str.strip().rstrip('/')
+    if '/' in cleaned:
+        return cleaned.split('/')[-1]
+    return cleaned
+
 @app.post("/analyze")
 async def analyze_profile(request: AnalyzeRequest):
-    username = request.username.strip().split('/')[-1] # Handle URL or username
+    username = extract_username(request.username)
     
+    if not username:
+        raise HTTPException(status_code=400, detail="Invalid username or URL provided")
+        
     try:
         # 1. Fetch GitHub Data
         user_data = await github_service.get_user_profile(username)
@@ -37,7 +53,7 @@ async def analyze_profile(request: AnalyzeRequest):
             readmes[repo['name']] = readme if readme else "No README"
             
         # 3. Get AI Qualitative Analysis
-        ai_analysis = await openai_service.analyze_profile_qualitative(user_data, repos, readmes)
+        ai_analysis = await gemini_service.analyze_profile_qualitative(user_data, repos, readmes)
         
         # 4. Calculate Scores
         scores = scoring.get_final_scores(
